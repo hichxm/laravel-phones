@@ -18,7 +18,7 @@
     "hichxm/laravel-sortable": "^1.0",
     "illuminate/database": "^9.0|^10.0|^11.0",
     "nesbot/carbon": "^2.63|^3.0",
-    "propaganistas/laravel-phone": "^5.2.0",
+    "propaganistas/laravel-phone": "^4.0|^5.0",
     "spatie/laravel-package-tools": "^1.16.4"
   },
   "autoload": {
