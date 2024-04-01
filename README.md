@@ -56,3 +56,53 @@ $user->addPhone('+33987654321');
 $user->addPhone('0987654321', ['FR']); // with country code, will be stored as +33987654321
 $user->addPhone('+33612345678', [], 'mobile'); // with type
 ```
+
+You can also use the `phones` relationship to retrieve the phones numbers.
+
+```php
+$user = User::find(1);
+
+$phones = $user->phones;
+$mobilePhones = $user->phones()->where('type', 'mobile')->get();
+
+// Use scopes
+$phones = $user->getPhones();
+$mobilePhones = $user->getPhones('mobile'); // specify the type
+$firstPhone = $user->getFirstPhone(); // get the first phone
+```
+
+## Methods and Relations
+
+### `HasPhones` methods and relations
+
+> List of methods available when using the [`HasPhones`](./src/Models/Concerns/HasPhones.php) trait.
+
+#### Relation : `phones(): MorphMany`
+
+Get the phones relationship ordered.
+
+#### Relation : `unorderedPhones(): MorphMany`
+
+Get the phones relationship without any order.
+
+#### Method : `addPhone($number, $countries = [], $type = null): Phone`
+
+Add a phone number to the model.
+
+#### Method : `getPhones($type = null): Collection|Phone[]`
+
+Get the phones numbers related to the model.
+
+#### Method : `getFirstPhone($type = null): Phone`
+
+Get the first phone number related to the model.
+
+## Testing
+
+```bash
+./vendor/bin/phpunit
+```
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
