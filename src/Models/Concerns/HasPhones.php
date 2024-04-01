@@ -64,7 +64,7 @@ trait HasPhones
 
     public function addPhone(string $number, array $country = [], string $type = null): Phone
     {
-        if(method_exists('ofCountry', PhoneNumber::class)) {
+        if(method_exists(PhoneNumber::class, 'ofCountry')) {
             $phoneNumber = (new PhoneNumber($number))->ofCountry($country);
         } else {
             $phoneNumber = new PhoneNumber($number, $country);
