@@ -48,7 +48,13 @@ class Phone extends Model
     protected function laravelSortableQuery(): Builder
     {
         return $this->newQuery()
-            ->where('phoneable_type', $this->phoneable_type)
-            ->where('phoneable_id', $this->phoneable_id);
+            ->when($this->type, function (Builder $query) {
+                return $query->where('type', '=', $this->type);
+            })
+            ->when($this->phoneable_id && $this->phoneable_type, function (Builder $query) {
+                return $query
+                    ->where('phoneable_id', '=', $this->phoneable_id)
+                    ->where('phoneable_type', '=', $this->phoneable_type);
+            });
     }
 }

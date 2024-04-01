@@ -104,9 +104,9 @@ class LaravelPhonesTest extends TestCase
         $person = $this->createDummyPerson();
 
         $phone1 = $person->addPhone('+33612345678', [], 'mobile');
+        $phone4 = $person->addPhone('+33612345681', [], 'other');
         $phone2 = $person->addPhone('+33612345679', [], 'mobile');
         $phone3 = $person->addPhone('+33612345680', [], 'mobile');
-        $phone4 = $person->addPhone('+33612345681', [], 'other');
 
         $person->reorderPhones([
             $phone3->id,
@@ -119,7 +119,36 @@ class LaravelPhonesTest extends TestCase
         $this->assertEquals(1, $phone3->fresh()->order);
         $this->assertEquals(2, $phone1->fresh()->order);
         $this->assertEquals(3, $phone2->fresh()->order);
-        $this->assertEquals(4, $phone4->fresh()->order);
+        $this->assertEquals(1, $phone4->fresh()->order);
+    }
+
+    public function test_it_can_reorder_phones_by_type()
+    {
+        $person = $this->createDummyPerson();
+
+        $phone1 = $person->addPhone('+33612345678', [], 'mobile');
+        $phone4 = $person->addPhone('+33612345681', [], 'other');
+        $phone2 = $person->addPhone('+33612345679', [], 'mobile');
+        $phone5 = $person->addPhone('+33612345681', [], 'other');
+        $phone3 = $person->addPhone('+33612345680', [], 'mobile');
+
+        $person->reorderPhonesByType([
+            $phone3->id,
+            $phone1->id,
+            $phone2->id,
+        ], 'mobile');
+
+        $person->reorderPhones([
+            $phone5->id,
+            $phone4->id,
+        ]);
+
+        $this->assertEquals(1, $phone3->fresh()->order);
+        $this->assertEquals(2, $phone1->fresh()->order);
+        $this->assertEquals(3, $phone2->fresh()->order);
+
+        $this->assertEquals(1, $phone5->fresh()->order);
+        $this->assertEquals(2, $phone4->fresh()->order);
     }
 
     public function test_cast_it_return_phone_number_class()

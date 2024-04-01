@@ -5,6 +5,7 @@ namespace Hichxm\LaravelPhones\Models\Concerns;
 use Hichxm\LaravelPhones\Models\Phone;
 use Hichxm\LaravelSortable\Traits\HasSortableColumn;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -112,7 +113,21 @@ trait HasPhones
      */
     public function reorderPhones($ids, int $startIndex = 1, callable $customizeQuery = null): void
     {
-        $this->getPhoneModel()::setNewOrder($ids, $startIndex, $customizeQuery);
+        $this->getPhoneModel()::setNewOrder($ids, $startIndex, function (Builder $builder) use ($customizeQuery) {
+            return $builder
+                ->when($customizeQuery, $customizeQuery)
+                ->whereColumn('phoneable_type', '=', $this->getMorphClass())
+                ->whereColumn('phoneable_id', '=', $this->getKey());
+        });
+    }
+
+    public function reorderPhonesByType($ids, string $type = null, int $startIndex = 1, callable $customizeQuery = null): void
+    {
+        $this->reorderPhones($ids, $startIndex, function (Builder $builder) use ($type, $customizeQuery) {
+            return $builder
+                ->when($customizeQuery, $customizeQuery)
+                ->when($type, fn($query) => $query->where('type', $type));
+        });
     }
 
     /**
