@@ -247,4 +247,25 @@ class LaravelPhonesTest extends TestCase
 
         $this->assertDatabaseCount('phones', 2);
     }
+
+    public function test_it_ordered_by_entity()
+    {
+        $person = $this->createDummyPerson();
+
+        $person2 = $this->createDummyPerson();
+
+        $person1Phone1 = $person->addPhone('+33612345678');
+        $person2Phone1 = $person2->addPhone('+33612345678');
+        $person1Phone2 = $person->addPhone('+33612345679');
+        $person2Phone2 = $person2->addPhone('+33612345679');
+        $person1Phone3 = $person->addPhone('+33612345680');
+        $person2Phone3 = $person2->addPhone('+33612345680');
+
+        $this->assertEquals(1, $person1Phone1->order);
+        $this->assertEquals(2, $person1Phone2->order);
+        $this->assertEquals(3, $person1Phone3->order);
+        $this->assertEquals(1, $person2Phone1->order);
+        $this->assertEquals(2, $person2Phone2->order);
+        $this->assertEquals(3, $person2Phone3->order);
+    }
 }

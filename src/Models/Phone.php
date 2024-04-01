@@ -4,6 +4,7 @@ namespace Hichxm\LaravelPhones\Models;
 
 use Carbon\Carbon;
 use Hichxm\LaravelSortable\Traits\HasSortableColumn;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Propaganistas\LaravelPhone\Casts\E164PhoneNumberCast;
@@ -36,8 +37,18 @@ class Phone extends Model
         'phone_e164' => E164PhoneNumberCast::class,
     ];
 
+    /**
+     * @return MorphTo
+     */
     public function phoneable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    protected function laravelSortableQuery(): Builder
+    {
+        return $this->newQuery()
+            ->where('phoneable_type', $this->phoneable_type)
+            ->where('phoneable_id', $this->phoneable_id);
     }
 }

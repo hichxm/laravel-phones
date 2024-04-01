@@ -52,13 +52,13 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
      * Create a dummy person
      *
      * @param array $attributes
-     * @param string $model
+     * @param string $usingModel
      * @return Person|PersonWithSoftDelete
      */
-    protected function createDummyPerson(array $attributes = [], string $model = Person::class): Person|PersonWithSoftDelete
+    protected function createDummyPerson(array $attributes = [], string $usingModel = Person::class): Person|PersonWithSoftDelete
     {
         /** @var Person $person */
-        $person = $this->app->make($model)::query()
+        $person = $this->app->make($usingModel)::query()
             ->create(array_merge([
                 'name' => 'John Doe',
             ], $attributes));
