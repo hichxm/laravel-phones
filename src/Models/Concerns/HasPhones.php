@@ -23,6 +23,10 @@ trait HasPhones
             self::forceDeleting(function (Model $model) {
                 $model->phones()->delete();
             });
+        } elseif(method_exists(self::class, 'forceDeleted')) {
+            self::forceDeleted(function (Model $model) {
+                $model->phones()->delete();
+            });
         } else {
             self::deleting(function (Model $model) {
                 $model->phones()->delete();
@@ -64,6 +68,7 @@ trait HasPhones
 
     public function addPhone(string $number, array $country = [], string $type = null): Phone
     {
+        // If the PhoneNumber class has a method ofCountry, use it.
         if(method_exists(PhoneNumber::class, 'ofCountry')) {
             $phoneNumber = (new PhoneNumber($number))->ofCountry($country);
         } else {
