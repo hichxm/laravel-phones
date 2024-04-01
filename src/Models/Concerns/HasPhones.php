@@ -23,15 +23,15 @@ trait HasPhones
     {
         if (method_exists(self::class, 'forceDeleting')) {
             self::forceDeleting(function (Model $model) {
-                $model->phones()->delete();
+                $model->unorderedPhones()->delete();
             });
         } elseif (method_exists(self::class, 'forceDeleted')) {
             self::forceDeleted(function (Model $model) {
-                $model->phones()->delete();
+                $model->unorderedPhones()->delete();
             });
         } else {
             self::deleting(function (Model $model) {
-                $model->phones()->delete();
+                $model->unorderedPhones()->delete();
             });
         }
     }
