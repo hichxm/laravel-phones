@@ -21,18 +21,15 @@ trait HasPhones
 
     public static function bootHasPhones(): void
     {
-        if (method_exists(self::class, 'forceDeleting')) {
-            self::forceDeleting(function (Model $model) {
-                $model->unorderedPhones()->delete();
-            });
-        } elseif (method_exists(self::class, 'forceDeleted')) {
-            self::forceDeleted(function (Model $model) {
-                $model->unorderedPhones()->delete();
-            });
-        } else {
-            self::deleting(function (Model $model) {
-                $model->unorderedPhones()->delete();
-            });
+        $deletePhones = function (Model $model) {
+            $model->unorderedPhones()->delete();
+        };
+
+        foreach (['forceDeleting', 'forceDeleted', 'deleting'] as $event) {
+            if (method_exists(self::class, $event)) {
+                self::$event($deletePhones);
+                break;
+            }
         }
     }
 
