@@ -12,7 +12,7 @@ use Propaganistas\LaravelPhone\PhoneNumber;
 /**
  * Trait HasPhones
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 trait HasPhones
 {
